@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <title>Mobile Models Identifier</title>
+</head>
+<body>
+    <div class="main">
+        <div class="inner">
+            <h1>Mobile Models Identifier</h1>
+            <button onclick="getCompany()">
+                Start Searching
+            </button>
+        </div>
+        
+        <div id="identifier" class="ident">
+        </div>
+    </div>
+    
+
+    <script src="app.js"></script>
+    <script>
+        
+        var parent = document.getElementById('identifier');
+        function getCompany(){
+            
+            
+            var parentClass = document.querySelectorAll('.ident');
+            parent.style.display = 'flex';
+            // Create Select Element
+            var selectList = document.createElement('select');
+            
+            var text = document.createTextNode(Object.keys(a.mobiles));
+            selectList.id = 'mobilecompanies';
+            selectList.setAttribute("onchange", 'SearchFields()');
+            var ChkCompany = document.getElementById('mobilecompanies');
+            if(!ChkCompany){
+                parent.appendChild(selectList);
+            }
+
+            // Create Company List Options for select and add values in it
+            var companyList = Object.keys(a.mobiles);
+            for(var i = 0; i < companyList.length; i++){
+                var mbl_OptionList = document.createElement('option');
+                mbl_OptionList.value = companyList[i];
+                mbl_OptionList.text = companyList[i];
+                selectList.appendChild(mbl_OptionList);
+            }
+        }
+        
+        //Create Search Fields
+        function SearchFields(){
+            var inputField = document.createElement('input');
+            var SearchBtn = document.createElement('button');
+            var BtnVal = document.createTextNode('Search Specs');
+            SearchBtn.appendChild(BtnVal);
+            SearchBtn.setAttribute("onclick", 'handleSearch()');
+            inputField.id = "searchValue";
+            var Chkfield = document.getElementById('searchValue');
+            if(!Chkfield){
+                parent.appendChild(inputField);
+                parent.appendChild(SearchBtn);
+            }
+        }
+
+        // Search Model
+
+        function handleSearch() {
+            var value = document.getElementById('searchValue').value;
+            var notFound = document.getElementById('not-found');
+            if (value != '') {
+                var selected_company = document.getElementById("mobilecompanies").value;
+                var dataTable = document.getElementById('mobilespecs');
+                var table = document.createElement('table');
+                var tbdy = document.createElement('tbody');
+                var tbHeading = document.createElement('tbody');
+                var tableRowForKeys = document.createElement('tr');
+                var tableRowForValues = document.createElement('tr');
+                table.style.width = '100%';
+                table.setAttribute('border', '1');
+                table.id = 'mobilespecs';
+                if(dataTable){
+                    parent.removeChild(dataTable);
+                }
+                parent.appendChild(table);
+                var searchIndex = Object.keys(a.mobiles[selected_company]).indexOf(value);
+                if(searchIndex == -1){
+                    if(notFound){
+                        parent.removeChild(notFound);
+                    }
+                    var divElem = document.createElement("div");
+                    divElem.id = 'not-found';
+                    divElem.appendChild(document.createTextNode("Model not Found"));
+                    parent.appendChild(divElem);
+                }
+                else{
+                    if(notFound){
+                        parent.removeChild(notFound);
+                    }
+                    var object_modelKeys = Object.keys(a.mobiles[selected_company][value]);
+                    var object_modelValue = Object.values(a.mobiles[selected_company][value]);
+                    for(var i = 0; i < object_modelValue.length; i++){
+                        var tableColumnForKeys = document.createElement('td');
+                        var tableColumnForValues = document.createElement('td');
+                        tableColumnForKeys.appendChild(document.createTextNode(object_modelKeys[i].toUpperCase()));
+                        tableColumnForValues.appendChild(document.createTextNode(object_modelValue[i]));
+                        var test1 = document.getElementById('row1');
+                        var test2 = document.getElementById('row2');
+                        tableRowForKeys.appendChild(tableColumnForKeys);
+                        tableRowForValues.appendChild(tableColumnForValues);
+                        tbdy.appendChild(tableRowForKeys);
+                        tbdy.appendChild(tableRowForValues); 
+                        
+                    }
+                }    
+                table.appendChild(tbdy);
+            }
+            else{
+                if(notFound){
+                    parent.removeChild(notFound);
+                }
+                divElem = document.createElement("div");
+                divElem.id = 'not-found';
+                divElem.appendChild(document.createTextNode("Please enter model"));
+                parent.appendChild(divElem);
+            }
+        }
+    </script>
+</body>
+</html>
